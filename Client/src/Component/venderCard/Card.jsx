@@ -22,11 +22,11 @@ import Cookies from "js-cookie";
 import { BASE_URL, toaster } from "../../Utils/Utility";
 
 export default function RestaurantCard({
- restaurant,
-setIsRefresh,
-isRefresh,
-setUpdateModalOpen,
-setSelectedRestaurant
+  restaurant,
+  setIsRefresh,
+  isRefresh,
+  setOpenModel,
+  setSelectRestaurant,
 }) {
   const {
     restaurantName,
@@ -38,7 +38,6 @@ setSelectedRestaurant
     isOpen,
     isApproved,
   } = restaurant || {};
-  const [open, setOpen] = useState(false);
 
   const deleteHandler = async (id) => {
     try {
@@ -54,20 +53,33 @@ setSelectedRestaurant
     }
   };
 
-  // const updateHandler = async (id) => {
-  // try {
-  // const res = await axios.put(`${BASE_URL}/api/vendor-restaurant/${id}`, {
-  // headers: {
-  // Authorization: `Bearer ${Cookies.get("token")}`,
-  // },
-  // });
+  const isOpenStatus = async () => {
+    try {
+      const id = restaurant._id;
+      const updateObj = {
+        isOpen: !isOpen,
+      };
+      const response = await axios.patch(
+        `${BASE_URL}/api/vendor-restaurant-isOpen-status/${id}`,
+        updateObj,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
 
-  // setSelectedRestaurant(res.data.data); // Pre-fill form
-  //       setVendorModals(true); // Open modal
-  //   } catch (error) {
-  //     toaster({ message: error.message, type: "error" });
-  //   }
-  // };
+      if (!response.data.status) {
+        return toaster({ message: response.data.message, type: "error" });
+      }
+      setIsRefresh(!isRefresh);
+
+      toaster({ message: "Restaurant Status Update", type: "success" });
+      setIsRefresh(!isRefresh);
+    } catch (error) {
+      toaster({ message: error.message, type: "error" });
+    }
+  };
 
   return (
     <>
@@ -98,8 +110,8 @@ setSelectedRestaurant
               />
               <EditIcon
                 onClick={() => {
-                  // setSelectedRestaurant(restaurant);
-                  setUpdateModalOpen(true);
+                  setSelectRestaurant(restaurant);
+                  setOpenModel(true);
                 }}
                 sx={{ cursor: "pointer", ml: 1 }}
               />
@@ -149,6 +161,7 @@ setSelectedRestaurant
 
         <CardActions sx={{ display: "flex", justifyContent: "end" }}>
           <Button
+            onClick={isOpenStatus}
             size="small"
             variant="outlined"
             color={isOpen ? "success" : "error"}

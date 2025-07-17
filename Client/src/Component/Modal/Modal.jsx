@@ -29,7 +29,6 @@ export default function VendorModal({
   setOpen,
   isRefresh,
   setIsRefresh,
-  selectedRestaurant,
 }) {
   const schema = yup.object({
     restaurantName: yup.string().required(),
@@ -54,14 +53,15 @@ export default function VendorModal({
 
   const handleClose = () => setOpen(false);
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (obj) => {
+    console.log(obj)
     try {
      const res = await axios.post(`${BASE_URL}/api/create-restaurant`, obj, {
     headers: {
       Authorization: `Bearer ${Cookies.get("token")}`,
     },
   });
-
+console.log(res,"response number")
       toaster({
         message: "Restaurant Updated",
         type: "success",
@@ -129,7 +129,7 @@ export default function VendorModal({
                   label="Contact"
                   fullWidth
                   {...field}
-                  error={!!error}
+                  error={error}
                   helperText={error?.message}
                 />
               )}
@@ -143,7 +143,7 @@ export default function VendorModal({
                   label="Address"
                   fullWidth
                   {...field}
-                  error={!!error}
+                  error={error}
                   helperText={error?.message}
                 />
               )}
@@ -178,11 +178,12 @@ export default function VendorModal({
             />
 
             <Button variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>
-              {selectedRestaurant ? "Update" : "Submit"}
+        Submit
             </Button>
           </Box>
         </Box>
       </Fade>
     </Modal>
   );
+
 }

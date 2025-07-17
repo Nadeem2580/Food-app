@@ -6,15 +6,18 @@ import axios from "axios";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
 import RestaurantCard from "../../../Component/venderCard/Card";
-import UpdateModal from "../../../Component/Modal/UpdateModel";
+import EditModel from "../../../Component/Modal/EditModal";
 
 const VandorRestaurant = () => {
+  //  ------------ Create Model -------------
   const [vendorModals, setVendorModals] = useState(false); // for Create
-  const [updateModalOpen, setUpdateModalOpen] = useState(false); // for Update
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
+  //  ------------ Update Model -------------
+  const [OpenModel, setOpenModel] = useState(false);
+
   const [isRefresh, setIsRefresh] = useState(false);
   const [restaurantData, setRestaurantData] = useState([]);
-
+  const [selectRestaurant, setSelectRestaurant] = useState({});
   useEffect(() => {
     fetchData();
   }, [isRefresh]);
@@ -62,26 +65,29 @@ const VandorRestaurant = () => {
             restaurant={restaurant}
             setIsRefresh={setIsRefresh}
             isRefresh={isRefresh}
-            setUpdateModalOpen={setUpdateModalOpen}
-            setSelectedRestaurant={setSelectedRestaurant}
+            setOpenModel={setOpenModel}
+            setSelectRestaurant={setSelectRestaurant}
           />
         ))}
       </Grid>
 
-     <VendorModal
-  open={vendorModals}
-  setOpen={setVendorModals}
-  isRefresh={isRefresh}
-  setIsRefresh={setIsRefresh}
-/>
+      <VendorModal
+        open={vendorModals}
+        setOpen={setVendorModals}
+        isRefresh={isRefresh}
+        setIsRefresh={setIsRefresh}
+      />
 
-<UpdateModal
-  open={updateModalOpen}
-  setOpen={setUpdateModalOpen}
-  restaurant={selectedRestaurant}
-  setIsRefresh={setIsRefresh}
-  isRefresh={isRefresh}
-/>
+      {OpenModel && (
+        <EditModel
+          open={OpenModel}
+          setOpen={setOpenModel}
+          restaurantData={restaurantData}
+          selectRestaurant={selectRestaurant}
+          isRefresh={isRefresh}
+          setIsRefresh={setIsRefresh}
+        />
+      )}
     </VenderLayout>
   );
 };

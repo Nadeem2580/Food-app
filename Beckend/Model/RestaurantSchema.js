@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
     restaurantName: String,
     details: String,
     address: String,
+    contactNumber :String,
     email: String,
     category: String,
     isOpen: {

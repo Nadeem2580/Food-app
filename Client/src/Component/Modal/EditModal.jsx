@@ -30,11 +30,14 @@ const style = {
 
 const categories = ["Italian", "Chinese", "Indian", "Mexican", "Thai", "Other"];
 
-export default function UpdateModal({open,
-setOpen,
-restaurant,
-setIsRefresh,
-isRefresh}) {
+export default function EditModel({
+  open,
+  setOpen,
+  isRefresh,
+  setIsRefresh,
+  selectRestaurant,
+}) {
+  // --------------- schema Model -----------
   const schema = yup.object({
     restaurantName: yup.string().required(),
     details: yup.string().required(),
@@ -43,6 +46,8 @@ isRefresh}) {
     email: yup.string().required(),
     category: yup.string().required(),
   });
+
+  // --------------- Default Values and UseForm initialization -----------
 
   const { handleSubmit, reset, control } = useForm({
     defaultValues: {
@@ -56,14 +61,45 @@ isRefresh}) {
     resolver: yupResolver(schema),
   });
 
+  // --------------- Modal is closing here --------------------
   const handleClose = () => setOpen(false);
 
-  const onSubmit = async (obj) => {
-    console.log(obj, "object");
-    console.log(restaurant, "restaurant");
+  // ------------- Onsubmit funstion is running here ------------------
 
-    
-};
+  const onSubmit = async (obj) => {
+    const updateObj = {
+      address: obj.address,
+      category: obj.category,
+      contactNumber: obj.contactNumber,
+      details: obj.details,
+      email: obj.email,
+      restaurantName: obj.restaurantName,
+    };
+    try {
+      const updateRes = await axios.put(`${BASE_URL}/api/vendor-restaurant/${obj._id}`,updateObj,{
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
+      toaster({
+        message: "Restaurant Updated",
+        type: "success",
+      });
+      handleClose();
+      reset();
+      setIsRefresh(!isRefresh);
+    } catch (error) {
+      toaster({ message: error.message, type: "error" });
+    }
+  };
+
+  React.useEffect(() => {
+    reset(selectRestaurant);
+  }, []);
+
+  //  --------------------- Modal HTML COde ----------------
+
   return (
     <Modal
       open={open}
@@ -78,10 +114,10 @@ isRefresh}) {
             <Typography
               variant="h5"
               textAlign="center"
-              color="error"
+              color="warning"
               sx={{ textDecoration: "underline" }}
             >
-   update your registration
+              Update Your Restaurant
             </Typography>
 
             <Controller
@@ -182,7 +218,7 @@ isRefresh}) {
               color="primary"
               onClick={handleSubmit(onSubmit)}
             >
-              Submit
+              Update
             </Button>
           </Box>
         </Box>

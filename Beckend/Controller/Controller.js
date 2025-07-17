@@ -65,7 +65,6 @@ export const loginController = async (req, res) => {
     const privateKey = process.env.PRIVATE_KEY;
 
     const token = jwt.sign({ id: user._id }, privateKey);
-    console.log(token);
     res.json({
       status: true,
       message: "User successfully login",
@@ -115,7 +114,6 @@ export const createRestaurantController = async (req, res) => {
 export const getRestaurantControll = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("userId", userId);
     const data = await RestaurantModel.find({
       createBy: userId,
       isDeleted: false,
@@ -138,7 +136,6 @@ export const deleteContoller = async (req, res) => {
       isDeleted: true,
     };
     const response = await RestaurantModel.findByIdAndUpdate(id, updateDelete);
-    console.log(response);
     res.json({
       message: "Deleted Successfully",
       status: true,
@@ -146,7 +143,7 @@ export const deleteContoller = async (req, res) => {
     });
   } catch (error) {
     res.json({
-      message: error.meessage,
+      message: error.message,
       status: false,
       data: null,
     });
@@ -155,10 +152,13 @@ export const deleteContoller = async (req, res) => {
 
 // ------------ deleteContoller End-------------
 
+// ------------ updateContoller Start-------------
 export const updateContoller = async (req, res) => {
   try {
-    const response = await RestaurantModel.findById(req.params.id );
-    console.log(response,"response");
+    const id = req.params.id;
+    const response = await RestaurantModel.findByIdAndUpdate(id, req.body, {
+      key: true,
+    });
     res.json({
       message: "Deleted Successfully",
       status: true,
@@ -166,9 +166,44 @@ export const updateContoller = async (req, res) => {
     });
   } catch (error) {
     res.json({
-      message: error.meessage,
+      message: error.message,
       status: false,
       data: null,
     });
   }
 };
+// ------------ updateContoller End -------------
+
+// ------------ IsOpenContoller Start -------------
+export const isOpenContoller = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const body = req.body;
+    const getSingle = await RestaurantModel.findById(id);
+
+    if (!getSingle.isApproved) {
+      res.json({
+        message: "Wait for admin approval",
+        status: false,
+        data: null,
+      });
+    }
+
+    const updateObj = {
+      isOpen: body.isOpen,
+    };
+    await RestaurantModel.findByIdAndUpdate(id, updateObj);
+    return res.json({
+      status: true,
+      message: "restaurant status updated!",
+    });
+  } catch (error) {
+    res.json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+};
+
+// ------------ IsOpenContoller End -------------
