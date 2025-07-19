@@ -2,6 +2,12 @@ import RestaurantModel from "../Model/RestaurantSchema.js";
 import userModel from "../Model/schema.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import path from "path"; // if needed
+import fs from "fs";
+import cloudinary from "../configue/Cloudnary.js";
+import { triggerAsyncId } from "async_hooks";
+import ItemFoodSchema from "../Model/ItemCreateSchema.js";
+
 // ------------ signUpController -------------
 export const signUpController = async (req, res) => {
   try {
@@ -88,25 +94,36 @@ export const createRestaurantController = async (req, res) => {
   try {
     const body = req.body;
     const userId = req.user.id;
+    const parsedBody = JSON.parse(req.body.createRestaurant);
+    let fileUrl = "";
+
+    if (req.file) {
+      fileUrl = req.file.path; // multer-storage-cloudinary gives file.path as secure_url
+    }
+    console.log(fileUrl, "fileUrl");
     const restaurantObj = {
-      ...body,
+      ...parsedBody,
+      fileUrl,
       createBy: userId,
     };
+
     const response = await RestaurantModel.create(restaurantObj);
+    console.log(response, "response create Restaurant");
 
     res.json({
       status: true,
       data: response,
-      message: "successfully created! wait for the Admin Approval",
+      message: "Successfully created! Wait for admin approval.",
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: false,
       data: null,
-      message: error.message || "something went wrong",
+      message: error.message || "Something went wrong",
     });
   }
 };
+
 // ------------ createRestaurantController  End-------------
 
 // ------------ getRestaurantControll  Start-------------
@@ -181,9 +198,15 @@ export const isOpenContoller = async (req, res) => {
     const body = req.body;
     const getSingle = await RestaurantModel.findById(id);
 
-    if (!getSingle.isApproved) {
+    if (getSingle.approvedStatus === "pending") {
       res.json({
-        message: "Wait for admin approval",
+        message: "Restaurant is on pendiing Wait for admin approval",
+        status: false,
+        data: null,
+      });
+    } else if (getSingle.approvedStatus === "rejected") {
+      res.json({
+        message: "Restaurant is rejected by admin ",
         status: false,
         data: null,
       });
@@ -207,3 +230,111 @@ export const isOpenContoller = async (req, res) => {
 };
 
 // ------------ IsOpenContoller End -------------
+
+
+export const uploadImageContoller =(req, res)=>{
+  try {
+
+console.log(req.files[0].path , "req")
+
+
+
+
+
+
+
+res.json({
+      message: "image Uploaded",
+      status: true,
+      data: null,
+    });    
+  } catch (error) {
+    res.json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+}
+
+
+
+
+
+
+export const createFoodRestaurantController = async (req, res) => {
+  try {
+    const body = req.body;
+    const userId = req.user.id;
+    const parsedBody = JSON.parse(req.body.createFoodItem);
+    console.log(parsedBody, "parsedBody");
+    console.log(userId, "userId");
+    let fileUrl = "";
+    if (req.file) {
+      fileUrl = req.file.path;
+    }
+
+    console.log(fileUrl, "fileUrl");
+    const restaurantObj = {
+      ...parsedBody,
+      fileUrl,
+      createBy: userId,
+    };
+
+    const response = await ItemFoodSchema.create(restaurantObj);
+    console.log(response, "response create Restaurant");
+
+    return res.json({
+      status: true,
+      message: "restaurant food created",
+    });
+  } catch (error) {
+    res.json({
+      message: error.message,
+      status: false,
+      data: null,
+    });
+  }
+};
+
+export const getFoodDataControll = async (req, res) => {
+  try {
+    const userID = req.user.id;
+    const foodData = await ItemFoodSchema.find({
+      createBy: userID,
+      isDeleted: false,
+    });
+
+    res.json({
+      message: "Get all food item",
+      status: true,
+      data: foodData,
+    });
+  } catch (error) {
+    res.json({
+      message: error.message || "Something went wrong",
+      status: false,
+      data: null,
+    });
+  }
+};
+
+export const deleteFoodDataControl = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const responseDelete = await ItemFoodSchema.findById(id);
+
+    console.log(responseDelete);
+    res.json({
+      message: "Delete food item",
+      status: true,
+      data: null,
+    });
+  } catch (error) {
+    res.json({
+      message: error.message || "Something went wrong",
+      status: false,
+      data: null,
+    });
+  }
+};

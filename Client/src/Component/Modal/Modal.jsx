@@ -1,7 +1,13 @@
 import * as React from "react";
 import {
-  Backdrop, Box, Modal, Fade, Button, Typography,
-  TextField, MenuItem
+  Backdrop,
+  Box,
+  Modal,
+  Fade,
+  Button,
+  Typography,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -38,6 +44,7 @@ export default function VendorModal({
     email: yup.string().required(),
     category: yup.string().required(),
   });
+  const [image, setImage] = React.useState(null);
 
   const { handleSubmit, reset, control } = useForm({
     defaultValues: {
@@ -45,6 +52,7 @@ export default function VendorModal({
       details: "",
       contactNumber: "",
       address: "",
+      file: null,
       email: "",
       category: "",
     },
@@ -52,29 +60,52 @@ export default function VendorModal({
   });
 
   const handleClose = () => setOpen(false);
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
 
-  const onSubmit = async (obj) => {
-    console.log(obj)
+  const onSubmit = async (formDataValues) => {
     try {
-     const res = await axios.post(`${BASE_URL}/api/create-restaurant`, obj, {
-    headers: {
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  });
-console.log(res,"response number")
+      
+      const formData = new FormData();
+
+      // Append form fields as stringified JSON
+      formData.append("createRestaurant", JSON.stringify(formDataValues));
+
+      // Append image
+      if (image) {
+        formData.append("file", image); // 👈 must match backend key (upload.single("image"))
+      }
+
+      const res = await axios.post(
+        `${BASE_URL}/api/create-restaurant`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res , "formDataValues res")
+
       toaster({
-        message: "Restaurant Updated",
+        message: "Restaurant Created Successfully",
         type: "success",
       });
 
       handleClose();
       reset();
+      setImage(null);
       setIsRefresh(!isRefresh);
+
     } catch (error) {
       toaster({ message: error.message, type: "error" });
     }
   };
-
 
   return (
     <Modal
@@ -87,8 +118,13 @@ console.log(res,"response number")
       <Fade in={open}>
         <Box sx={style}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <Typography variant="h5" textAlign="center" color="warning" sx={{ textDecoration: "underline" }}>
-               Register Your Restaurant
+            <Typography
+              variant="h5"
+              textAlign="center"
+              color="warning"
+              sx={{ textDecoration: "underline" }}
+            >
+              Register Your Restaurant
             </Typography>
 
             <Controller
@@ -167,7 +203,14 @@ console.log(res,"response number")
               name="category"
               control={control}
               render={({ field, fieldState: { error } }) => (
-                <TextField select label="Category" fullWidth {...field} error={!!error} helperText={error?.message}>
+                <TextField
+                  select
+                  label="Category"
+                  fullWidth
+                  {...field}
+                  error={!!error}
+                  helperText={error?.message}
+                >
                   {categories.map((cat) => (
                     <MenuItem key={cat} value={cat}>
                       {cat}
@@ -177,13 +220,27 @@ console.log(res,"response number")
               )}
             />
 
-            <Button variant="contained" color="primary" onClick={handleSubmit(onSubmit)}>
-        Submit
+            <Button variant="outlined" component="label">
+              Upload Logo
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                name="logo"
+                onChange={handleChange}
+              />
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit(onSubmit)}
+            >
+              Submit
             </Button>
           </Box>
         </Box>
       </Fade>
     </Modal>
   );
-
 }
