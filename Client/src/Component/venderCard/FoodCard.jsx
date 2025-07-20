@@ -11,9 +11,28 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-const FoodCard = ({ food }) => {
+import { BASE_URL, toaster } from "../../Utils/Utility";
+import axios from "axios";
+import Cookies from "js-cookie";
+const FoodCard = ({ food, setIsRefresh, isRefresh }) => {
   const { name, price, description, category, isavailable, fileUrl } = food;
+
+  const deleteHandler = async (id) => {
+    try {
+      await axios.delete(
+        `${BASE_URL}/api/vendor-restaurant-food-delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")} `,
+          },
+        }
+      );
+      toaster({ message: "Restaurant deleted", type: "success" });
+      setIsRefresh(!isRefresh);
+    } catch (err) {
+      toaster({ message: err.message, type: "error" });
+    }
+  };
 
   return (
     <Card
@@ -46,7 +65,9 @@ const FoodCard = ({ food }) => {
         </Typography>
 
         <Typography variant="body2" color="text.secondary" gutterBottom>
-          {description.length > 60 ? description.slice(0, 60) + "..." : description}
+          {description?.length > 60
+            ? description?.slice(0, 60) + "..."
+            : description}
         </Typography>
 
         <Typography variant="body2" sx={{ mt: 1 }}>
@@ -73,7 +94,7 @@ const FoodCard = ({ food }) => {
 
           <Tooltip title="Delete">
             <IconButton color="error" size="small">
-              <DeleteIcon />
+              <DeleteIcon onClick={() => deleteHandler(food._id)} />
             </IconButton>
           </Tooltip>
         </Box>

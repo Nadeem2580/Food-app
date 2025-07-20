@@ -35,9 +35,7 @@ function a11yProps(index) {
   };
 }
 
-export default function RestaurantTabs({ dataFood }) {
-  console.log(dataFood, "RestaurantTabs");
-
+export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -67,14 +65,18 @@ export default function RestaurantTabs({ dataFood }) {
         </Tabs>
       </Box>
 
-      {groupedData.map((foodArray, index) => (
+      {groupedData?.map((foodArray, index) => (
         <CustomTabPanel key={index} value={value} index={index}>
           {foodArray.length > 0 ? (
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={2}>
                 {foodArray.map((item) => (
                   <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item._id}>
-                    <FoodCard food={item} />
+                    <FoodCard
+                      food={item}
+                      setIsRefresh={setIsRefresh}
+                      isRefresh={isRefresh}
+                    />
                   </Grid>
                 ))}
               </Grid>

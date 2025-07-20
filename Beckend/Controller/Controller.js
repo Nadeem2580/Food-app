@@ -4,9 +4,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import path from "path"; // if needed
 import fs from "fs";
-import cloudinary from "../configue/Cloudnary.js";
+// import cloudinary from "../configue/Cloudnary.js";
 import { triggerAsyncId } from "async_hooks";
 import ItemFoodSchema from "../Model/ItemCreateSchema.js";
+import { cloudinaryUplaoder } from "../configue/Cloudnary.js";
 
 // ------------ signUpController -------------
 export const signUpController = async (req, res) => {
@@ -94,21 +95,12 @@ export const createRestaurantController = async (req, res) => {
   try {
     const body = req.body;
     const userId = req.user.id;
-    const parsedBody = JSON.parse(req.body.createRestaurant);
-    let fileUrl = "";
 
-    if (req.file) {
-      fileUrl = req.file.path; // multer-storage-cloudinary gives file.path as secure_url
-    }
-    console.log(fileUrl, "fileUrl");
-    const restaurantObj = {
-      ...parsedBody,
-      fileUrl,
+    const dataobj = {
+      ...body,
       createBy: userId,
     };
-
-    const response = await RestaurantModel.create(restaurantObj);
-    console.log(response, "response create Restaurant");
+    const response = await RestaurantModel.create(dataobj);
 
     res.json({
       status: true,
@@ -149,10 +141,8 @@ export const getRestaurantControll = async (req, res) => {
 export const deleteContoller = async (req, res) => {
   try {
     const id = req.params.id;
-    const updateDelete = {
-      isDeleted: true,
-    };
-    const response = await RestaurantModel.findByIdAndUpdate(id, updateDelete);
+
+    const response = await RestaurantModel.findByIdAndDelete(id);
     res.json({
       message: "Deleted Successfully",
       status: true,
@@ -231,23 +221,21 @@ export const isOpenContoller = async (req, res) => {
 
 // ------------ IsOpenContoller End -------------
 
-
-export const uploadImageContoller =(req, res)=>{
+export const uploadImageContoller = async (req, res) => {
   try {
+    const filePath = req.files[0].path;
+    const imageResponse = await cloudinaryUplaoder.upload(filePath);
 
-console.log(req.files[0].path , "req")
+    // Remove Files
+    fs.unlinkSync(filePath, (err, res) => {
+      //
+    });
 
-
-
-
-
-
-
-res.json({
+    res.json({
       message: "image Uploaded",
       status: true,
-      data: null,
-    });    
+      url: imageResponse.secure_url,
+    });
   } catch (error) {
     res.json({
       message: error.message,
@@ -255,38 +243,24 @@ res.json({
       data: null,
     });
   }
-}
-
-
-
-
-
+};
 
 export const createFoodRestaurantController = async (req, res) => {
   try {
     const body = req.body;
     const userId = req.user.id;
-    const parsedBody = JSON.parse(req.body.createFoodItem);
-    console.log(parsedBody, "parsedBody");
-    console.log(userId, "userId");
-    let fileUrl = "";
-    if (req.file) {
-      fileUrl = req.file.path;
-    }
 
-    console.log(fileUrl, "fileUrl");
     const restaurantObj = {
-      ...parsedBody,
-      fileUrl,
+      ...body,
       createBy: userId,
     };
 
     const response = await ItemFoodSchema.create(restaurantObj);
-    console.log(response, "response create Restaurant");
 
     return res.json({
       status: true,
       message: "restaurant food created",
+      data: response,
     });
   } catch (error) {
     res.json({
@@ -322,9 +296,8 @@ export const getFoodDataControll = async (req, res) => {
 export const deleteFoodDataControl = async (req, res) => {
   try {
     const id = req.params.id;
-    const responseDelete = await ItemFoodSchema.findById(id);
+    const responseDelete = await ItemFoodSchema.findByIdAndDelete(id);
 
-    console.log(responseDelete);
     res.json({
       message: "Delete food item",
       status: true,
@@ -338,3 +311,27 @@ export const deleteFoodDataControl = async (req, res) => {
     });
   }
 };
+
+// export const foodListCreateController = async (req, res) => {
+//   try {
+//     const filePath = req.files[0].path;
+
+//     const imageResponse = await cloudinaryUplaoder.upload(filePath);
+
+//     fs.unlinkSync(filePath, (err, res) => {
+//       //
+//     });
+
+//     res.json({
+//       message: "Food list Created",
+//       status: true,
+//       url: imageResponse.secure_url,
+//     });
+//   } catch (error) {
+//     res.json({
+//       message: error.message || "Something went wrong",
+//       status: false,
+//       data: null,
+//     });
+//   }
+// };

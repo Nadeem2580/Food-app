@@ -37,7 +37,7 @@ export default function RestaurantCard({
     email,
     category,
     isOpen,
-    fileUrl,
+    imageUrl,
     approvedStatus,
   } = restaurant || {};
 
@@ -105,7 +105,7 @@ export default function RestaurantCard({
   {/* Image Section */}
   <Box
     component="img"
-    src={fileUrl}
+    src={imageUrl}
     alt={restaurantName}
     sx={{
       width: { xs: "100%", sm: 300 },
@@ -195,10 +195,10 @@ export default function RestaurantCard({
       flexDirection: "column",
       justifyContent: "space-between",
       alignItems: "flex-end",
-      backgroundColor: "#f1f5f9",
+      backgroundColor: "GrayText",
     }}
   >
-    <Stack direction="row" spacing={1}>
+    <Stack direction="row" spacing={1} >
       <IconButton onClick={() => deleteHandler(restaurant._id)} color="error">
         <DeleteIcon />
       </IconButton>

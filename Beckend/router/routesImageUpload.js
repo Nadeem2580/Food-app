@@ -1,9 +1,17 @@
-import express from "express"
-import { uploadImageContoller } from "../Controller/Controller.js"
+import express from "express";
+import {
+  uploadImageContoller,
+} from "../Controller/Controller.js";
+import upload from "../Middleware/MulterMiddleware.js";
+import authMiddleware from "../Middleware/authCheck.js";
 
-const uploadImage = express.Router()
+const uploadImage = express.Router();
+
+uploadImage.post(
+  "/upload-image",
+  [authMiddleware, upload.any("Image")],
+  uploadImageContoller
+);
 
 
-uploadImage.post("/upload-image", uploadImageContoller)
-
-export default uploadImage
+export default uploadImage;

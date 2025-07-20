@@ -52,7 +52,6 @@ export default function VendorModal({
       details: "",
       contactNumber: "",
       address: "",
-      file: null,
       email: "",
       category: "",
     },
@@ -61,47 +60,48 @@ export default function VendorModal({
 
   const handleClose = () => setOpen(false);
   const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
+    setImage(e.target.files[0]);
   };
 
   const onSubmit = async (formDataValues) => {
     try {
-      
-      const formData = new FormData();
-
-      // Append form fields as stringified JSON
-      formData.append("createRestaurant", JSON.stringify(formDataValues));
-
-      // Append image
+      let imageUrl;
       if (image) {
-        formData.append("file", image); // 👈 must match backend key (upload.single("image"))
-      }
+        const imageApi = `${BASE_URL}/api/upload-image`;
+        const formData = new FormData();
+        formData.append("Image", image);
 
-      const res = await axios.post(
+        const imageResponse = await axios.post(imageApi, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        });
+        console.log("imageResponse", imageResponse);
+        imageUrl = imageResponse.data.url;
+      }
+      const objToSend = {
+        ...formDataValues,
+        imageUrl: imageUrl || null,
+      };
+      const response = await axios.post(
         `${BASE_URL}/api/create-restaurant`,
-        formData,
+        objToSend,
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")} `,
           },
         }
       );
-      console.log(res , "formDataValues res")
-
+      
+      handleClose();
+      reset({});
+      
       toaster({
         message: "Restaurant Created Successfully",
         type: "success",
       });
-
-      handleClose();
-      reset();
-      setImage(null);
       setIsRefresh(!isRefresh);
-
     } catch (error) {
       toaster({ message: error.message, type: "error" });
     }
@@ -230,6 +230,12 @@ export default function VendorModal({
                 onChange={handleChange}
               />
             </Button>
+
+            {image && (
+              <Typography variant="body2" color="text.secondary">
+                Selected file: {image.name}
+              </Typography>
+            )}
 
             <Button
               variant="contained"

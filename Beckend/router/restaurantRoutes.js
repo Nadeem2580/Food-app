@@ -10,19 +10,16 @@ import {
   updateContoller,
 } from "../Controller/Controller.js";
 import authMiddleware from "../Middleware/authCheck.js";
-import upload from "../Middleware/MulterMiddleware.js";
 
 const restaurantRoutes = express.Router();
 
 restaurantRoutes.post(
   "/create-restaurant",
-  upload.single("file"),
   authMiddleware,
   createRestaurantController
 );
 restaurantRoutes.post(
   "/create-restaurant-food",
-  upload.single("file"),
   authMiddleware,
   createFoodRestaurantController
 );
@@ -50,7 +47,7 @@ restaurantRoutes.get(
 );
 
 restaurantRoutes.delete(
-  "/vendor-restaurant-get-food-data/:id",
+  "/vendor-restaurant-food-delete/:id",
   authMiddleware,
   deleteFoodDataControl
 );

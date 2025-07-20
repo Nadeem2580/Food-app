@@ -23,12 +23,7 @@ const VenderDashboard = () => {
       );
       setDataFood(foodData.data.data);
 
-      console.log(foodData, "foodData");
-    
-      toaster({
-        message: "Data fetch",
-        type: "success",
-      });
+     
     } catch (error) {
       toaster({
         message: error.message || "Something went wrong",
@@ -39,7 +34,7 @@ const VenderDashboard = () => {
 
   useEffect(() => {
     FoodCardsData();
-  }, []);
+  }, [isRefresh]);
 
   return (
     <>
@@ -56,7 +51,11 @@ const VenderDashboard = () => {
 
         {/* ----Restaurant Tabs button --------- */}
 
-        <RestaurantTabs dataFood ={dataFood} />
+        <RestaurantTabs
+          dataFood={dataFood}
+          setIsRefresh={setIsRefresh}
+          isRefresh={isRefresh}
+        />
 
         {/* ----Restaurant Tabs button --------- */}
 

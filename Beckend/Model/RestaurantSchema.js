@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
   address: String,
   contactNumber: String,
   email: String,
-  fileUrl: { type: String, default: null },
+  imageUrl: { type: String, default: null },
   category: String,
   isOpen: {
     type: Boolean,

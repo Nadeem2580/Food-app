@@ -4,10 +4,8 @@ const Schema = new mongoose.Schema({
   price: { type: String },
   description: { type: String },
   category: { type: String },
-  fileUrl: { type: String, default: null },
-  image: { type: String },
-  isApprovedStatus: { enum: ["approved", "pending", "rejected"] },
-  isavailable: { type: Boolean, default: false },
+ imageUrl: { type: String, default: null },
+  isavailable: { type: Boolean, default: true },
   createAt: {
     type: Date,
     default: Date.now(),

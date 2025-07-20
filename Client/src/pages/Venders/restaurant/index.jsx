@@ -14,10 +14,10 @@ const VandorRestaurant = () => {
 
   //  ------------ Update Model -------------
   const [OpenModel, setOpenModel] = useState(false);
-
   const [isRefresh, setIsRefresh] = useState(false);
   const [restaurantData, setRestaurantData] = useState([]);
   const [selectRestaurant, setSelectRestaurant] = useState({});
+
   useEffect(() => {
     fetchData();
   }, [isRefresh]);

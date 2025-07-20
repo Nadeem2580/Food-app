@@ -48,13 +48,10 @@ export default function FoodItemModal({
   isRefresh,
 }) {
   const [image, setImage] = useState(null);
-  
   const {
     handleSubmit,
     control,
     reset,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -70,53 +67,54 @@ export default function FoodItemModal({
 
   const handleClose = () => setOpen(false);
   const imageHandler = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-    }
+    setImage(e.target.files[0]);
   };
 
   const onSubmit = async (obj) => {
     try {
-      const formData = new FormData();
-
-      formData.append("createFoodItem", JSON.stringify(obj));
-
+      let imageUrl;
       if (image) {
-        formData.append("file", image); // 👈 must match backend key (upload.single("image"))
+        const imageApi = `${BASE_URL}/api/upload-image`;
+        const formData = new FormData();
+
+        formData.append("Image", image);
+        const imageResponse = await axios.post(imageApi, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        });
+        imageUrl = imageResponse.data.url;
       }
 
-      const res = await axios.post(
+      const sendObj = {
+        ...obj,
+        imageUrl: imageUrl || null,
+      };
+      const response = await axios.post(
         `${BASE_URL}/api/create-restaurant-food`,
-        formData,
+        sendObj,
         {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
-      console.log(res, "formDataValues res");
-   
-      toaster({
-        message: "Food item created successfully",
-        type: "success",
-      });
 
       handleClose();
       reset();
       setImage(null);
       setIsRefresh(!isRefresh);
+      toaster({
+        message: "Food item created successfully",
+        type: "success",
+      });
     } catch (error) {
       toaster({
         message: error.message || "something went wrong",
         type: "error",
       });
     }
-
-    console.log("Form submitted:", obj);
-
-    reset();
   };
 
   return (
@@ -201,26 +199,6 @@ export default function FoodItemModal({
             )}
           />
 
-          {/* Image Upload */}
-          {/* <Controller
-            name="image"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setValue("image", e.target.files)}
-                />
-                {errors.image && (
-                  <Typography color="error" variant="body2">
-                    {errors.image.message}
-                  </Typography>
-                )}
-              </>
-            )}
-          /> */}
-
           <Button variant="outlined" component="label">
             Upload Logo
             <input
@@ -232,14 +210,9 @@ export default function FoodItemModal({
             />
           </Button>
 
-          {/* Image Preview */}
-          {/* {imageFile && imageFile.length > 0 && (
-            <img
-              src={URL.createObjectURL(imageFile[0])}
-              alt="Preview"
-              style={{ width: "100px", height: "auto", borderRadius: "8px" }}
-            />
-          )} */}
+          {image && (
+            <Typography variant="body2"> Selected :{image.name}</Typography>
+          )}
 
           {/* Availability Toggle */}
           <Controller
