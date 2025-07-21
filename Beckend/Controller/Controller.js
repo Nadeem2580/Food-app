@@ -44,6 +44,26 @@ export const signUpController = async (req, res) => {
 };
 // ------------ signUpController  end-------------
 
+export const singleUserControl = async (req, res) => {
+  try {
+
+    const id = req.user.id;
+    const singleUser = await userModel.findById(id);
+    console.log(singleUser, "singleUser");
+    res.json({
+      status: true,
+      message: "Single User Get",
+      data: singleUser,
+    });
+  } catch (error) {
+    res.json({
+      status: false,
+      message: error.message || "something went wrong",
+      data: null,
+    });
+  }
+};
+
 // ------------ LoginController  Start-------------
 
 export const loginController = async (req, res) => {
@@ -64,7 +84,7 @@ export const loginController = async (req, res) => {
     if (!comparePass) {
       return res.json({
         status: false,
-        message: "email or password is invalids",
+        message: "email or password is invalid",
         data: null,
       });
     }

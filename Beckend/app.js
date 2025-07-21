@@ -5,6 +5,7 @@ import { dbConnect } from "./configue/db.js";
 import authRoutes from "./router/authRoutes.js";
 import restaurantRoutes from "./router/restaurantRoutes.js";
 import uploadImage from "./router/routesImageUpload.js";
+import adminRouter from "./router/adminRoutes.js";
 
 
 const app = express();
@@ -19,6 +20,7 @@ dbConnect()
 app.use("/api",authRoutes)
 app.use("/api",restaurantRoutes)
 app.use("/api",uploadImage)
+app.use("/api",adminRouter)
 app.get("/", (req , res)=>res.send("Api is working"))
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`));
