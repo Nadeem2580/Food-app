@@ -1,7 +1,9 @@
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import HomePage from "./pages/HomePage";
 import { Bounce, ToastContainer } from "react-toastify";
+import "./App.css";
 import {
   AdminDashboard,
   VandorRestaurant,
@@ -9,27 +11,28 @@ import {
   VenderMenu,
   VendorOrder,
 } from "./Index";
-import AuthRoutes from "./pages/Routes/AuthRoutes";
-import VendorRoutes from "./pages/Routes/VendorRoutes";
-import UserRoutes from "./pages/Routes/UserRoutes";
-import UserDashboard from "./pages/users/userDashboard/UserDashboard";
-import AdminRoute from "./pages/Routes/AdminRoute";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { BASE_URL } from "./Utils/Utility";
-import { useEffect, useState } from "react";
-import AdminVendor from "./pages/Admin/adminVendor/AdminVendor";
 import AdminCustomer from "./pages/Admin/adminCustomer/AdminCustomer";
 import AdminRestaurant from "./pages/Admin/adminRestaurants/AdminRestaurant";
+import AdminVendor from "./pages/Admin/adminVendor/AdminVendor";
+import HomePage from "./pages/HomePage";
+import AdminRoute from "./pages/Routes/AdminRoute";
+import AuthRoutes from "./pages/Routes/AuthRoutes";
+import UserRoutes from "./pages/Routes/UserRoutes";
+import VendorRoutes from "./pages/Routes/VendorRoutes";
+import UserDashboard from "./pages/users/userDashboard/UserDashboard";
+import { BASE_URL } from "./Utils/Utility";
+import AdminLayout from "./Component/Layout/AdminLayout";
+import VenderLayout from "./Component/Layout/VenderLayout";
 function App() {
   const token = Cookies.get("token");
   const [userType, setUserType] = useState(null);
   const [isRefresh, setIsRefresh] = useState(null);
+
   useEffect(() => {
-    if (token) fetchUser();
+    if (token) fetchVendors();
     else setUserType("unauthorized");
   }, [isRefresh]);
-  const fetchUser = async () => {
+  const fetchVendors = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/login.sigleUser`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -57,15 +60,22 @@ function App() {
         </Route>
 
         {/* Vendor Routes */}
-        <Route element={<VendorRoutes userType={userType} />}>
-          <Route path="/vendor-dahsboard" element={<VendorRoutes />} />
+       
+        <Route element={ <VenderLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><VendorRoutes userType={userType} /> </VenderLayout>}>
+          <Route path="/vendor-dahsboard" element={<VenderDashboard />} />
           <Route path="/vendor-Menu" element={<VenderMenu />} />
           <Route path="/vendor-Order" element={<VendorOrder />} />
           <Route path="/vendor-Restaurant" element={<VandorRestaurant />} />
         </Route>
 
         {/* Admin Route */}
-        <Route element={<AdminRoute userType={userType} />}>
+        <Route
+          element={
+            <AdminLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}>
+              <AdminRoute userType={userType} />
+            </AdminLayout>
+          }
+        >
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/vendors" element={<AdminVendor />} />
           <Route path="/customer" element={<AdminCustomer />} />
@@ -73,7 +83,9 @@ function App() {
         </Route>
 
         {/* User Routes */}
-        <Route element={<UserRoutes userType={userType} />}>
+
+        
+        <Route element={<AdminLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><UserRoutes userType={userType} /></AdminLayout>}>
           <Route path="/user-dashboard" element={<UserDashboard />} />
         </Route>
       </Routes>

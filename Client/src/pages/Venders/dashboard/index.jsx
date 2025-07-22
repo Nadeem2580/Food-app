@@ -22,8 +22,6 @@ const VenderDashboard = () => {
         }
       );
       setDataFood(foodData.data.data);
-
-     
     } catch (error) {
       toaster({
         message: error.message || "Something went wrong",
@@ -31,14 +29,14 @@ const VenderDashboard = () => {
       });
     }
   };
-
+console.log(dataFood , "dataFood")
   useEffect(() => {
     FoodCardsData();
   }, [isRefresh]);
 
   return (
     <>
-      <VenderLayout>
+    
         {/* ----Create item button --------- */}
         <Button
           variant="contained"
@@ -69,7 +67,7 @@ const VenderDashboard = () => {
         />
 
         {/* ----Item Modal --------- */}
-      </VenderLayout>
+     
     </>
   );
 };

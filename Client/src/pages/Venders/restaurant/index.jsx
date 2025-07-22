@@ -39,7 +39,8 @@ const VandorRestaurant = () => {
   };
 
   return (
-    <VenderLayout>
+    
+    <>
       <Box
         sx={{
           display: "flex",
@@ -88,7 +89,7 @@ const VandorRestaurant = () => {
           setIsRefresh={setIsRefresh}
         />
       )}
-    </VenderLayout>
+   </>
   );
 };
 

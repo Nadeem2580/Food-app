@@ -18,15 +18,18 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import PersonIcon from "@mui/icons-material/Person";
 import Person2Icon from "@mui/icons-material/Person2";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Link, useNavigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import Cookies from "js-cookie";
 
-import { Link } from "react-router-dom";
 const drawerWidth = 240;
 
 function AdminLayout(props) {
-  const { window, children } = props;
+  const navigate = useNavigate();
+  const { window, children, isRefresh, setIsRefresh } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -40,6 +43,12 @@ function AdminLayout(props) {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
     }
+  };
+
+  const logoutFunc = () => {
+    Cookies.remove("token");
+    setIsRefresh(!isRefresh);
+    navigate("/");
   };
 
   const VendorListing = [
@@ -92,6 +101,7 @@ function AdminLayout(props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          marginBottom: "30px",
         }}
       >
         <Toolbar>
@@ -107,6 +117,10 @@ function AdminLayout(props) {
           <Typography variant="h6" noWrap component="div">
             Admin Dashboard
           </Typography>
+
+          <Tooltip title="Logout" sx={{ marginLeft: "auto" }}>
+            <LogoutIcon onClick={logoutFunc} />
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Box
@@ -158,6 +172,7 @@ function AdminLayout(props) {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
+        <Toolbar />
         <Toolbar />
         {children}
       </Box>

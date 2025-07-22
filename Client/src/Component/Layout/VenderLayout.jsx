@@ -20,10 +20,13 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Cookies  from "js-cookie"
 const drawerWidth = 240;
 
 function VenderLayout(props) {
-  const { window , children } = props;
+  const { window , children , setIsRefresh  ,isRefresh} = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -41,7 +44,11 @@ function VenderLayout(props) {
       setMobileOpen(!mobileOpen);
     }
   };
-
+  const logoutFunc = () => {
+    Cookies.remove("token");
+    setIsRefresh(!isRefresh);
+    navigate("/");
+  };
   const VendorListing = [
     {
       name: "Dashboard",
@@ -110,8 +117,11 @@ function VenderLayout(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+           Vendors
           </Typography>
+           <Tooltip title="Logout" sx={{ marginLeft: "auto" }}>
+            <LogoutIcon onClick={logoutFunc} />
+          </Tooltip>
         </Toolbar>
       </AppBar>
       <Box

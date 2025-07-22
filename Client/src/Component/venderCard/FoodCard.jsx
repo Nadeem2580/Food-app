@@ -15,8 +15,8 @@ import { BASE_URL, toaster } from "../../Utils/Utility";
 import axios from "axios";
 import Cookies from "js-cookie";
 const FoodCard = ({ food, setIsRefresh, isRefresh }) => {
-  const { name, price, description, category, isavailable, fileUrl } = food;
-
+  const { name, price, description, category, isavailable, imageUrl } = food;
+console.log(food , "fileUrl")
   const deleteHandler = async (id) => {
     try {
       await axios.delete(
@@ -54,7 +54,7 @@ const FoodCard = ({ food, setIsRefresh, isRefresh }) => {
       <CardMedia
         component="img"
         height="180"
-        image={fileUrl}
+        image={imageUrl}
         alt={name}
         sx={{ objectFit: "cover" }}
       />
@@ -88,7 +88,7 @@ const FoodCard = ({ food, setIsRefresh, isRefresh }) => {
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Tooltip title="Edit">
             <IconButton color="primary" size="small">
-              <EditIcon />
+              <EditIcon onClick={()=>{editfood()}} />
             </IconButton>
           </Tooltip>
 

@@ -46,10 +46,8 @@ export const signUpController = async (req, res) => {
 
 export const singleUserControl = async (req, res) => {
   try {
-
     const id = req.user.id;
     const singleUser = await userModel.findById(id);
-    console.log(singleUser, "singleUser");
     res.json({
       status: true,
       message: "Single User Get",
