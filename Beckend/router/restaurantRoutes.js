@@ -4,6 +4,7 @@ import {
   createRestaurantController,
   deleteContoller,
   deleteFoodDataControl,
+  foodItem_edit_contoller,
   getFoodDataControll,
   getRestaurantControll,
   isOpenContoller,
@@ -51,5 +52,7 @@ restaurantRoutes.delete(
   authMiddleware,
   deleteFoodDataControl
 );
+
+restaurantRoutes.put( "/vendor-restaurant-food-edit/:id" , authMiddleware , foodItem_edit_contoller)
 
 export default restaurantRoutes;

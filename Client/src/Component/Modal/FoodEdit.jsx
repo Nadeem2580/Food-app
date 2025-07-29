@@ -28,7 +28,7 @@ const style = {
   p: 4,
 };
 
-const categories = ["Biryani", "Fast Food" , "Chiness" ];
+const categories = ["Biryani", "Fast Food", "Chiness"];
 
 const schema = yup.object().shape({
   name: yup.string().required("Food name is required"),
@@ -41,11 +41,12 @@ const schema = yup.object().shape({
   category: yup.string().required("Category is required"),
 });
 
-export default function FoodItemModal({
+export default function FoodEditModal({
   open,
   setOpen,
   setIsRefresh,
   isRefresh,
+  selected,
 }) {
   const [image, setImage] = useState(null);
   const {
@@ -88,11 +89,14 @@ export default function FoodItemModal({
       }
 
       const sendObj = {
-        ...obj,
-        imageUrl: imageUrl || null,
+        name: obj.name,
+        price: obj.price,
+        description: obj.description,
+        category: obj.category,
+        imageUrl: imageUrl,
       };
-      const response = await axios.post(
-        `${BASE_URL}/api/create-restaurant-food`,
+      const response = await axios.put(
+        `${BASE_URL}/api/vendor-restaurant-food-edit/${selected._id}`,
         sendObj,
         {
           headers: {
@@ -100,7 +104,7 @@ export default function FoodItemModal({
           },
         }
       );
-
+      console.log(response, "response edit");
       handleClose();
       reset();
       setImage(null);
@@ -116,6 +120,10 @@ export default function FoodItemModal({
       });
     }
   };
+
+  React.useEffect(() => {
+    reset(selected);
+  }, [selected]);
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>

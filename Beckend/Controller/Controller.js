@@ -330,6 +330,31 @@ export const deleteFoodDataControl = async (req, res) => {
   }
 };
 
+export const foodItem_edit_contoller = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id, "req.body.id");
+    const existingItem = await ItemFoodSchema.findById(id);
+    
+   
+    const response = await ItemFoodSchema.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    console.log(response, "response");
+    res.json({
+      message: "Updated food item",
+      status: true,
+      data: response,
+    });
+  } catch (error) {
+    res.json({
+      message: error.message || "Something went wrong",
+      status: false,
+      data: null,
+    });
+  }
+};
+
 // export const foodListCreateController = async (req, res) => {
 //   try {
 //     const filePath = req.files[0].path;

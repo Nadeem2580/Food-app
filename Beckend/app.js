@@ -1,11 +1,10 @@
-import express, { urlencoded } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import express from "express";
 import { dbConnect } from "./configue/db.js";
+import adminRouter from "./router/adminRoutes.js";
 import authRoutes from "./router/authRoutes.js";
 import restaurantRoutes from "./router/restaurantRoutes.js";
 import uploadImage from "./router/routesImageUpload.js";
-import adminRouter from "./router/adminRoutes.js";
 
 
 const app = express();

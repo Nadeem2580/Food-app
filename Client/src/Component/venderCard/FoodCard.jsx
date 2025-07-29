@@ -14,9 +14,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { BASE_URL, toaster } from "../../Utils/Utility";
 import axios from "axios";
 import Cookies from "js-cookie";
-const FoodCard = ({ food, setIsRefresh, isRefresh }) => {
+
+
+
+
+const FoodCard = ({ food, setIsRefresh, isRefresh , setOpen ,setSelected}) => {
   const { name, price, description, category, isavailable, imageUrl } = food;
-console.log(food , "fileUrl")
   const deleteHandler = async (id) => {
     try {
       await axios.delete(
@@ -88,7 +91,10 @@ console.log(food , "fileUrl")
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
           <Tooltip title="Edit">
             <IconButton color="primary" size="small">
-              <EditIcon onClick={()=>{editfood()}} />
+              <EditIcon  onClick={()=>{
+                 setSelected(food);
+                setOpen(true);
+              }}/>
             </IconButton>
           </Tooltip>
 

@@ -10,7 +10,7 @@ import EditModel from "../../../Component/Modal/EditModal";
 
 const VandorRestaurant = () => {
   //  ------------ Create Model -------------
-  const [vendorModals, setVendorModals] = useState(false); // for Create
+  const [vendorModals, setVendorModals] = useState(false);
 
   //  ------------ Update Model -------------
   const [OpenModel, setOpenModel] = useState(false);

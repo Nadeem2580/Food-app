@@ -1,331 +1,60 @@
-import * as yup from "yup";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Stack,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-  FormHelperText,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { BASE_URL, toaster } from "../Utils/Utility";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { useState } from "react";
-
-const HomePage = ({ isRefresh, setIsRefresh }) => {
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/";
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-
-  const loginSchema = yup.object({
-    email: yup.string().email().required("Email is required"),
-    password: yup.string().required("Password is required"),
-  });
-
-  const signUpSchema = yup.object({
-    fullName: yup.string().required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-    confirmPassword: yup
-      .string()
-      .required()
-      .oneOf([yup.ref("password")], "Passwords must match"),
-    type: yup.string().required(),
-  });
-
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-    reset,
-  } = useForm({
-    resolver: yupResolver(isLoginPage ? loginSchema : signUpSchema),
-    defaultValues: isLoginPage
-      ? { email: "", password: "" }
-      : {
-          fullName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          type: "",
-        },
-  });
-
-  const toggleForm = () => navigate(isLoginPage ? "/signup" : "/");
-
-  const loginFunc = async (obj) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/api/login`, obj);
-      if (!res.data.status)
-        throw toaster({ type: "error", message: res.data.message });
-      Cookies.set("token", res.data.token);
-      setIsRefresh(!isRefresh);
-      const user = res.data.data;
-      
-      if (user.type === "admin") navigate("/admin-dashboard");
-      else if (user.type === "vendor") navigate("/vendor-dahsboard");
-      else if (user.type === "customer") navigate("/user-dashboard");
-      toaster({ type: "success", message: "Login successful" });
-      reset();
-    } catch (error) {
-      toaster({ type: "error", message: error?.message });
-    }
-  };
-
-  const signupFunc = async (obj) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/api/signup`, obj);
-      toaster({ type: "success", message: "Signup successful" });
-      reset();
-      navigate("/");
-    } catch (error) {
-      toaster({ type: "error", message: error.message });
-    }
-  };
-
+import React from 'react'
+import Navbar from '../Component/Navbar/Navbar'
+import { Box, Button, Container, Grid, Typography } from '@mui/material'
+import hero from "../assets/hero.png"
+import CallMadeIcon from '@mui/icons-material/CallMade';
+import AutoScrollSlider from '../Component/AutoScrollSlider/AutoScrollSlider';
+const HomePage = () => {
   return (
-    <Stack
-      justifyContent="center"
-      alignItems="center"
-      sx={{ minHeight: "100vh" }}
-    >
-      <Box sx={{ width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" } }}>
-        <AnimatePresence mode="wait">
-          {isLoginPage ? (
-            <motion.div
-              key="login"
-              initial={{ opacity: 0, rotateY: 90 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              exit={{ opacity: 0, rotateY: -90 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                padding: 30,
-                background: "white",
-                borderRadius: 10,
-                boxShadow: "0 0 10px #aaa",
-              }}
-            >
-              <Typography align="center" fontSize={24}>
-                Login
-              </Typography>
-              <form onSubmit={handleSubmit(loginFunc)}>
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      label="Email"
-                      fullWidth
-                      margin="normal"
-                      {...field}
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      margin="normal"
-                      error={!!errors.password}
-                    >
-                      <InputLabel>Password</InputLabel>
-                      <OutlinedInput
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                      <FormHelperText>
-                        {errors.password?.message}
-                      </FormHelperText>
-                    </FormControl>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  sx={{ mt: 2 }}
-                >
-                  Login
-                </Button>
-                <Button onClick={toggleForm} sx={{ mt: 1 }}>
-                  Create new account
-                </Button>
-              </form>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="signup"
-              initial={{ opacity: 0, rotateY: 90 }}
-              animate={{ opacity: 1, rotateY: 0 }}
-              exit={{ opacity: 0, rotateY: -90 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                padding: 30,
-                background: "white",
-                borderRadius: 10,
-                boxShadow: "0 0 10px #aaa",
-              }}
-            >
-              <Typography align="center" fontSize={24}>
-                Signup
-              </Typography>
-              <form onSubmit={handleSubmit(signupFunc)}>
-                <Controller
-                  name="fullName"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      label="Full Name"
-                      fullWidth
-                      margin="normal"
-                      {...field}
-                      error={!!errors.fullName}
-                      helperText={errors.fullName?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      label="Email"
-                      fullWidth
-                      margin="normal"
-                      {...field}
-                      error={!!errors.email}
-                      helperText={errors.email?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      margin="normal"
-                      error={!!errors.password}
-                    >
-                      <InputLabel>Password</InputLabel>
-                      <OutlinedInput
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                      />
-                      <FormHelperText>
-                        {errors.password?.message}
-                      </FormHelperText>
-                    </FormControl>
-                  )}
-                />
-                <Controller
-                  name="confirmPassword"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      margin="normal"
-                      error={!!errors.confirmPassword}
-                    >
-                      <InputLabel>Confirm Password</InputLabel>
-                      <OutlinedInput
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                      />
-                      <FormHelperText>
-                        {errors.confirmPassword?.message}
-                      </FormHelperText>
-                    </FormControl>
-                  )}
-                />
-                <Controller
-                  name="type"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      fullWidth
-                      margin="normal"
-                      error={!!errors.type}
-                    >
-                      <Typography>Choose role:</Typography>
-                      <RadioGroup row {...field}>
-                        <FormControlLabel
-                          value="vendor"
-                          control={<Radio />}
-                          label="Vendor"
-                        />
-                        <FormControlLabel
-                          value="customer"
-                          control={<Radio />}
-                          label="Customer"
-                        />
-                      </RadioGroup>
-                      <FormHelperText>{errors.type?.message}</FormHelperText>
-                    </FormControl>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  sx={{ mt: 2 }}
-                >
-                  Signup
-                </Button>
-                <Button onClick={toggleForm} sx={{ mt: 1 }}>
-                  Already have an account?
-                </Button>
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </Box>
-    </Stack>
-  );
-};
 
-export default HomePage;
+    <Navbar >
+      <Box sx={{ background: "#f8f5f2" }}>
+
+        <Container minHeight="xl">
+
+          <Box sx={{ minHeight: "90vh", display: "flex", alignItems: "center", justifyContent: "start" }}>
+            <Grid spacing={2} container>
+              <Grid size={{ xs: 12, md: 6 }} sx={{ display: "flex", justifyContent: "center", flexDirection: "column", padding: "20px" }}>
+                <Typography
+                  sx={{
+                    textAlign: "left",
+                    fontSize: {
+                      xs: '1.25rem',
+                      md: '1.5rem',
+                      lg: '3rem'
+
+                    },
+                    display: "flex",
+                    justifyContent: "start",
+                    fontWeight: 700,
+                    color: '#3b82f6',
+                    fontFamily: 'Roboto',
+                    marginBottom: "20px"
+                  }}
+                >
+                  Saylani Papa Food App
+                </Typography>
+
+                <Typography sx={{ color: "#95ca4d" }}>
+                  Saylani Papa delivers more than food — we deliver care. Our mission is to serve the community with warm, healthy, and affordable meals for all, especially those in need. Join us in spreading kindness, one meal at a time.
+                </Typography>
+                <Button variant='contained'
+                  sx={{ marginTop: "20px", background: "#95ca4d", color: "#fff", fontWeight: "700", fontSize: "18px", padding: "10px 0" }}>Order Now
+                  <CallMadeIcon /></Button>
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+
+
+                <img src={hero} alt="" style={{ width: "100%", height: "auto" }} />
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+
+      </Box>
+<AutoScrollSlider />
+    </Navbar>
+  )
+}
+
+export default HomePage

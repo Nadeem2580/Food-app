@@ -1,0 +1,4 @@
+.custom-text::first-letter {
+  color: #fff !important;
+  font-size: 36px !important;
+}

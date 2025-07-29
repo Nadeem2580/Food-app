@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
+import FoodEditModal from "../../../Component/Modal/FoodEdit";
 const VenderDashboard = () => {
   const [fooditemModel, setFooditemModel] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
@@ -29,44 +30,36 @@ const VenderDashboard = () => {
       });
     }
   };
-console.log(dataFood , "dataFood")
   useEffect(() => {
     FoodCardsData();
   }, [isRefresh]);
 
   return (
     <>
-    
-        {/* ----Create item button --------- */}
-        <Button
-          variant="contained"
-          sx={{ float: "right" }}
-          onClick={() => setFooditemModel(true)}
-        >
-          Create food item
-        </Button>
-        {/* ----Create item button --------- */}
-
-        {/* ----Restaurant Tabs button --------- */}
-
-        <RestaurantTabs
-          dataFood={dataFood}
-          setIsRefresh={setIsRefresh}
-          isRefresh={isRefresh}
-        />
-
-        {/* ----Restaurant Tabs button --------- */}
-
-        {/* ----Item Modal --------- */}
-
-        <ItemModal
-          open={fooditemModel}
-          setOpen={setFooditemModel}
-          setIsRefresh={setIsRefresh}
-          isRefresh={isRefresh}
-        />
-
-        {/* ----Item Modal --------- */}
+      {/* ----Create item button --------- */}
+      <Button
+        variant="contained"
+        sx={{ float: "right" }}
+        onClick={() => setFooditemModel(true)}
+      >
+        Create food item
+      </Button>
+      {/* ----Create item button --------- */}
+      {/* ----Restaurant Tabs button --------- */}
+      <RestaurantTabs
+        dataFood={dataFood}
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+      />
+      {/* ----Restaurant Tabs button --------- */}
+      {/* ----Item Modal --------- */}
+      <ItemModal
+        open={fooditemModel}
+        setOpen={setFooditemModel}
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+      />
+      {/* ----Item Modal --------- */}
      
     </>
   );

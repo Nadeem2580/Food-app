@@ -23,15 +23,13 @@ import UserDashboard from "./pages/users/userDashboard/UserDashboard";
 import { BASE_URL } from "./Utils/Utility";
 import AdminLayout from "./Component/Layout/AdminLayout";
 import VenderLayout from "./Component/Layout/VenderLayout";
+import LoginPage from "./pages/Auth/Login";
 function App() {
   const token = Cookies.get("token");
   const [userType, setUserType] = useState(null);
   const [isRefresh, setIsRefresh] = useState(null);
 
-  useEffect(() => {
-    if (token) fetchVendors();
-    else setUserType("unauthorized");
-  }, [isRefresh]);
+
   const fetchVendors = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/login.sigleUser`, {
@@ -43,25 +41,25 @@ function App() {
       setUserType("unauthorized");
     }
   };
+  useEffect(() => {
+    if (token) fetchVendors();
+    else setUserType("unauthorized");
+  }, [isRefresh]);
 
-  console.log(userType, "userType");
   return (
     <>
       <Routes>
         {/* Auth Routes */}
         <Route element={<AuthRoutes userType={userType} />}>
-          <Route
-            path="/"
-            element={
-              <HomePage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />
-            }
-          />
-          <Route path="/signup" element={<HomePage />} />
+          <Route  path="/" element={<HomePage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />  }/>
+
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<LoginPage />} />
         </Route>
 
         {/* Vendor Routes */}
-       
-        <Route element={ <VenderLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><VendorRoutes userType={userType} /> </VenderLayout>}>
+
+        <Route element={<VenderLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><VendorRoutes userType={userType} /> </VenderLayout>}>
           <Route path="/vendor-dahsboard" element={<VenderDashboard />} />
           <Route path="/vendor-Menu" element={<VenderMenu />} />
           <Route path="/vendor-Order" element={<VendorOrder />} />
@@ -84,7 +82,7 @@ function App() {
 
         {/* User Routes */}
 
-        
+
         <Route element={<AdminLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><UserRoutes userType={userType} /></AdminLayout>}>
           <Route path="/user-dashboard" element={<UserDashboard />} />
         </Route>

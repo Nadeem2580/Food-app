@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import { Button, Grid } from "@mui/material";
 import FoodCard from "../venderCard/FoodCard";
+import FoodEditModal from "../Modal/FoodEdit";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -37,6 +38,8 @@ function a11yProps(index) {
 
 export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
   const [value, setValue] = React.useState(0);
+  const [foodopen, setFoodopen] = React.useState(false);
+  const [selected, setSelected] = React.useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,6 +79,8 @@ export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
                       food={item}
                       setIsRefresh={setIsRefresh}
                       isRefresh={isRefresh}
+                      setOpen={setFoodopen}
+                      setSelected={setSelected}
                     />
                   </Grid>
                 ))}
@@ -86,6 +91,14 @@ export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
           )}
         </CustomTabPanel>
       ))}
+
+      <FoodEditModal
+        open={foodopen}
+        setOpen={setFoodopen}
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+        selected={selected}
+      />
     </Box>
   );
 }

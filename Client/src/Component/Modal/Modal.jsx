@@ -93,10 +93,10 @@ export default function VendorModal({
           },
         }
       );
-      
+
       handleClose();
       reset({});
-      
+
       toaster({
         message: "Restaurant Created Successfully",
         type: "success",
