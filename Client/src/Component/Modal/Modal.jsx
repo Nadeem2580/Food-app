@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { BASE_URL, toaster } from "../../Utils/Utility";
 import Cookies from "js-cookie";
+import { useAppContext } from "../../Context/userContext";
 
 const style = {
   position: "absolute",
@@ -28,13 +29,12 @@ const style = {
   p: 4,
 };
 
-const categories = ["Italian", "Chinese", "Indian", "Mexican", "Thai", "Other"];
+const categories = ["Fast food" , "Bar B.Q" , "Deserts", "Karahi" , ];
 
 export default function VendorModal({
   open,
   setOpen,
-  isRefresh,
-  setIsRefresh,
+ 
 }) {
   const schema = yup.object({
     restaurantName: yup.string().required(),
@@ -45,7 +45,7 @@ export default function VendorModal({
     category: yup.string().required(),
   });
   const [image, setImage] = React.useState(null);
-
+const {isRefresh,setIsRefresh} = useAppContext()
   const { handleSubmit, reset, control } = useForm({
     defaultValues: {
       restaurantName: "",

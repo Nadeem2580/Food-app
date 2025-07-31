@@ -8,14 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import Cookies from "js-cookie";
-import AdminLayout from "../../../Component/Layout/AdminLayout";
+import { useEffect, useState } from "react";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useAppContext } from "../../../Context/userContext";
 
 const AdminVendor = () => {
   const [vendors, setVendors] = useState([]);
-  const [isRefresh, setIsRefresh] = useState(false);
+  const { isRefresh, setIsRefresh } = useAppContext()
   const fetchVendor = async () => {
     try {
       const vendorsGet = await axios.get(`${BASE_URL}/api/admin-all-vendor`, {
@@ -76,7 +75,7 @@ const AdminVendor = () => {
           borderRadius: "5px",
         }}
       >
-        All Customers
+        All Vendors
       </Typography>
 
       <TableContainer component={Paper}>

@@ -5,8 +5,9 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import axios from "axios";
 import { Button, Grid } from "@mui/material";
-import FoodCard from "../venderCard/FoodCard";
 import FoodEditModal from "../Modal/FoodEdit";
+import FoodCard from "../allCard/FoodCard";
+import { useAppContext } from "../../Context/userContext";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -36,11 +37,11 @@ function a11yProps(index) {
   };
 }
 
-export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
+export default function RestaurantTabs({ dataFood }) {
   const [value, setValue] = React.useState(0);
   const [foodopen, setFoodopen] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-
+  const {isRefresh , setIsRefresh}=useAppContext()
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -77,8 +78,6 @@ export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
                   <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item._id}>
                     <FoodCard
                       food={item}
-                      setIsRefresh={setIsRefresh}
-                      isRefresh={isRefresh}
                       setOpen={setFoodopen}
                       setSelected={setSelected}
                     />
@@ -96,7 +95,6 @@ export default function RestaurantTabs({ dataFood, setIsRefresh, isRefresh }) {
         open={foodopen}
         setOpen={setFoodopen}
         setIsRefresh={setIsRefresh}
-        isRefresh={isRefresh}
         selected={selected}
       />
     </Box>

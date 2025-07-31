@@ -24,11 +24,11 @@ import { BASE_URL } from "./Utils/Utility";
 import AdminLayout from "./Component/Layout/AdminLayout";
 import VenderLayout from "./Component/Layout/VenderLayout";
 import LoginPage from "./pages/Auth/Login";
+import { useAppContext } from "./Context/userContext";
 function App() {
   const token = Cookies.get("token");
   const [userType, setUserType] = useState(null);
-  const [isRefresh, setIsRefresh] = useState(null);
-
+  const { isRefresh, setIsRefresh } = useAppContext()
 
   const fetchVendors = async () => {
     try {
@@ -51,15 +51,15 @@ function App() {
       <Routes>
         {/* Auth Routes */}
         <Route element={<AuthRoutes userType={userType} />}>
-          <Route  path="/" element={<HomePage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />  }/>
+          <Route path="/" element={<HomePage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />} />
 
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />} />
+          <Route path="/signup" element={<LoginPage isRefresh={isRefresh} setIsRefresh={setIsRefresh} />} />
         </Route>
 
         {/* Vendor Routes */}
 
-        <Route element={<VenderLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><VendorRoutes userType={userType} /> </VenderLayout>}>
+        <Route element={<VenderLayout ><VendorRoutes userType={userType} /> </VenderLayout>}>
           <Route path="/vendor-dahsboard" element={<VenderDashboard />} />
           <Route path="/vendor-Menu" element={<VenderMenu />} />
           <Route path="/vendor-Order" element={<VendorOrder />} />
@@ -69,7 +69,7 @@ function App() {
         {/* Admin Route */}
         <Route
           element={
-            <AdminLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}>
+            <AdminLayout >
               <AdminRoute userType={userType} />
             </AdminLayout>
           }
@@ -83,7 +83,7 @@ function App() {
         {/* User Routes */}
 
 
-        <Route element={<AdminLayout isRefresh={isRefresh} setIsRefresh={setIsRefresh}><UserRoutes userType={userType} /></AdminLayout>}>
+        <Route element={<AdminLayout ><UserRoutes userType={userType} /></AdminLayout>}>
           <Route path="/user-dashboard" element={<UserDashboard />} />
         </Route>
       </Routes>

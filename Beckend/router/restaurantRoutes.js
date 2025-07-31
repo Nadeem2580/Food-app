@@ -7,6 +7,7 @@ import {
   foodItem_edit_contoller,
   getFoodDataControll,
   getRestaurantControll,
+  getRestaurantHomeControll,
   isOpenContoller,
   updateContoller,
 } from "../Controller/Controller.js";
@@ -53,6 +54,24 @@ restaurantRoutes.delete(
   deleteFoodDataControl
 );
 
-restaurantRoutes.put( "/vendor-restaurant-food-edit/:id" , authMiddleware , foodItem_edit_contoller)
+restaurantRoutes.put("/vendor-restaurant-food-edit/:id", authMiddleware, foodItem_edit_contoller)
+
+// --------- for Home cards ---------
+restaurantRoutes.get(
+  "/vendor-restaurant-home",
+  getRestaurantHomeControll
+);
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default restaurantRoutes;

@@ -22,12 +22,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import Cookies from "js-cookie";
-
+import { useAppContext } from "../../Context/userContext";
 const drawerWidth = 240;
 
+
 function AdminLayout(props) {
+  const { isRefresh, setIsRefresh } = useAppContext()
   const navigate = useNavigate();
-  const { window, children, isRefresh, setIsRefresh } = props;
+  const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const handleDrawerClose = () => {

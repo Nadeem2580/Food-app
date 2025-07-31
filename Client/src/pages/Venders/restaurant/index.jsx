@@ -5,8 +5,9 @@ import VendorModal from "../../../Component/Modal/Modal";
 import axios from "axios";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
-import RestaurantCard from "../../../Component/venderCard/Card";
+import RestaurantCard from "../../../Component/allCard/Card";
 import EditModel from "../../../Component/Modal/EditModal";
+import { useAppContext } from "../../../Context/userContext";
 
 const VandorRestaurant = () => {
   //  ------------ Create Model -------------
@@ -14,10 +15,9 @@ const VandorRestaurant = () => {
 
   //  ------------ Update Model -------------
   const [OpenModel, setOpenModel] = useState(false);
-  const [isRefresh, setIsRefresh] = useState(false);
   const [restaurantData, setRestaurantData] = useState([]);
   const [selectRestaurant, setSelectRestaurant] = useState({});
-
+     const {isRefresh ,setIsRefresh} = useAppContext()
   useEffect(() => {
     fetchData();
   }, [isRefresh]);

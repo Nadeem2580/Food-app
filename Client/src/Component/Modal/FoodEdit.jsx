@@ -16,6 +16,7 @@ import { useState } from "react";
 import { BASE_URL, toaster } from "../../Utils/Utility";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useAppContext } from "../../Context/userContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -44,11 +45,10 @@ const schema = yup.object().shape({
 export default function FoodEditModal({
   open,
   setOpen,
-  setIsRefresh,
-  isRefresh,
   selected,
 }) {
   const [image, setImage] = useState(null);
+  
   const {
     handleSubmit,
     control,
@@ -65,7 +65,7 @@ export default function FoodEditModal({
     },
     resolver: yupResolver(schema),
   });
-
+const {isRefresh ,setIsRefresh}= useAppContext()
   const handleClose = () => setOpen(false);
   const imageHandler = (e) => {
     setImage(e.target.files[0]);

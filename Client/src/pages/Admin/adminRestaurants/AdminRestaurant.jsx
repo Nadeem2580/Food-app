@@ -12,9 +12,10 @@ import AdminLayout from "../../../Component/Layout/AdminLayout";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useAppContext } from "../../../Context/userContext";
 const AdminRestaurant = () => {
   const [restaurants, setRestaurants] = useState([]);
-  const [isRefresh, setIsRefresh] = useState(false);
+const {isRefresh,setIsRefresh}=  useAppContext()
   const fetchRestaurants = async () => {
     try {
       const getRestaurants = await axios.get(

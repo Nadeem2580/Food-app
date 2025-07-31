@@ -15,6 +15,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { BASE_URL, toaster } from "../../Utils/Utility";
 import Cookies from "js-cookie";
+import { useAppContext } from "../../Context/userContext";
+
 
 const style = {
   position: "absolute",
@@ -28,13 +30,11 @@ const style = {
   p: 4,
 };
 
-const categories = ["Italian", "Chinese", "Indian", "Mexican", "Thai", "Other"];
+const categories = ["Biryani", "Fast Food", "Chiness"];
 
 export default function EditModel({
   open,
   setOpen,
-  isRefresh,
-  setIsRefresh,
   selectRestaurant,
 }) {
   // --------------- schema Model -----------
@@ -47,6 +47,7 @@ export default function EditModel({
     category: yup.string().required(),
   });
 
+  const {isRefresh ,setIsRefresh}= useAppContext()
   // --------------- Default Values and UseForm initialization -----------
 
   const { handleSubmit, reset, control } = useForm({

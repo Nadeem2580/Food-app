@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import './navbar.css'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import logo from "../../assets/saylaniPapa.png"
 import { Link } from 'react-router-dom';
 const pages = [{
     title :"Login",
@@ -56,7 +57,7 @@ function Navbar({children}) {
                             textDecoration: 'none',
                         }}
                     >
-                        Saylani papa
+                       <img src={logo} alt="" style={{width :"200px" }} />
                     </Typography>
 
 

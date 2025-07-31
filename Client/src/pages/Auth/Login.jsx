@@ -24,13 +24,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { BASE_URL, toaster } from "../../Utils/Utility";
+import { useAppContext } from "../../Context/userContext";
 
-const LoginPage = ({ isRefresh, setIsRefresh }) => {
+const LoginPage = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-
+  const { isRefresh, setIsRefresh } = useAppContext()
   const loginSchema = yup.object({
     email: yup.string().email().required("Email is required"),
     password: yup.string().required("Password is required"),

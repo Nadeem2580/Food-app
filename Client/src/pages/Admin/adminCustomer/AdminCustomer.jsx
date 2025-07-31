@@ -8,14 +8,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import Cookies from "js-cookie";
-import AdminLayout from "../../../Component/Layout/AdminLayout";
+import { useEffect, useState } from "react";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useAppContext } from "../../../Context/userContext";
 
-const AdminCustomer = (isRefresh, setIsRefresh) => {
+const AdminCustomer = () => {
   const [customers, setcustomers] = useState([]);
-
+  const {isRefresh , setIsRefresh} = useAppContext()
   const fetchCustomer = async () => {
     try {
       const customersGet = await axios.get(
@@ -26,7 +25,6 @@ const AdminCustomer = (isRefresh, setIsRefresh) => {
           },
         }
       );
-
       setcustomers(customersGet.data.data);
     } catch (error) {
       toaster({
@@ -67,7 +65,7 @@ const AdminCustomer = (isRefresh, setIsRefresh) => {
   };
 
   return (
-   <>
+    <>
       <Typography
         variant="h5"
         textAlign="center"
@@ -117,8 +115,8 @@ const AdminCustomer = (isRefresh, setIsRefresh) => {
           </TableBody>
         </Table>
       </TableContainer>
-   </>
- 
+    </>
+
   );
 };
 

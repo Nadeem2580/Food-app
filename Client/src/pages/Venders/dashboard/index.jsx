@@ -7,11 +7,11 @@ import axios from "axios";
 import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
 import FoodEditModal from "../../../Component/Modal/FoodEdit";
+import { useAppContext } from "../../../Context/userContext";
 const VenderDashboard = () => {
   const [fooditemModel, setFooditemModel] = useState(false);
-  const [isRefresh, setIsRefresh] = useState(false);
   const [dataFood, setDataFood] = useState([]);
-
+  const { isRefresh, setIsRefresh } = useAppContext()
   const FoodCardsData = async () => {
     try {
       const foodData = await axios.get(
@@ -60,7 +60,7 @@ const VenderDashboard = () => {
         isRefresh={isRefresh}
       />
       {/* ----Item Modal --------- */}
-     
+
     </>
   );
 };

@@ -335,8 +335,8 @@ export const foodItem_edit_contoller = async (req, res) => {
     const id = req.params.id;
     console.log(id, "req.body.id");
     const existingItem = await ItemFoodSchema.findById(id);
-    
-   
+
+
     const response = await ItemFoodSchema.findByIdAndUpdate(id, req.body, {
       new: true,
     });
@@ -355,26 +355,22 @@ export const foodItem_edit_contoller = async (req, res) => {
   }
 };
 
-// export const foodListCreateController = async (req, res) => {
-//   try {
-//     const filePath = req.files[0].path;
+export const getRestaurantHomeControll = async (req, res) => {
+  try {
+    const getRestaurants = await RestaurantModel.find({approvedStatus : "approved"})
+    res.json({
+      message: "Get all restaurants for home page",
+      status: true,
+      data: getRestaurants
+    })
 
-//     const imageResponse = await cloudinaryUplaoder.upload(filePath);
 
-//     fs.unlinkSync(filePath, (err, res) => {
-//       //
-//     });
 
-//     res.json({
-//       message: "Food list Created",
-//       status: true,
-//       url: imageResponse.secure_url,
-//     });
-//   } catch (error) {
-//     res.json({
-//       message: error.message || "Something went wrong",
-//       status: false,
-//       data: null,
-//     });
-//   }
-// };
+  } catch (error) {
+    res.json({
+      message: error.message || "Something went wrong",
+      status: false,
+      data: null,
+    });
+  }
+}

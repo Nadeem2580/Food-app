@@ -22,14 +22,15 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Cookies  from "js-cookie"
+import Cookies from "js-cookie"
+import { useAppContext } from "../../Context/userContext";
 const drawerWidth = 240;
 
 function VenderLayout(props) {
-  const { window , children , setIsRefresh  ,isRefresh} = props;
+  const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-
+  const { isRefresh, setIsRefresh } = useAppContext()
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
@@ -117,9 +118,9 @@ function VenderLayout(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-           Vendors
+            Vendors
           </Typography>
-           <Tooltip title="Logout" sx={{ marginLeft: "auto" }}>
+          <Tooltip title="Logout" sx={{ marginLeft: "auto" }}>
             <LogoutIcon onClick={logoutFunc} />
           </Tooltip>
         </Toolbar>
