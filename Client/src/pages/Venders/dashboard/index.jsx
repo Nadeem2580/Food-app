@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import VenderLayout from "../../../Component/Layout/VenderLayout";
-import RestaurantTabs from "../../../Component/Layout/Tabs";
-import ItemModal from "../../../Component/Modal/ItemModel";
 import { Button } from "@mui/material";
 import axios from "axios";
-import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
-import FoodEditModal from "../../../Component/Modal/FoodEdit";
+import { useEffect, useState } from "react";
+import RestaurantTabs from "../../../Component/Layout/Tabs";
 import { useAppContext } from "../../../Context/userContext";
+import { BASE_URL, toaster } from "../../../Utils/Utility";
+import ItemModal from "../../../Component/Modal/ItemModel"
+
 const VenderDashboard = () => {
   const [fooditemModel, setFooditemModel] = useState(false);
   const [dataFood, setDataFood] = useState([]);
@@ -51,6 +50,7 @@ const VenderDashboard = () => {
         setIsRefresh={setIsRefresh}
         isRefresh={isRefresh}
       />
+
       {/* ----Restaurant Tabs button --------- */}
       {/* ----Item Modal --------- */}
       <ItemModal

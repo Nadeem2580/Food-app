@@ -22,6 +22,7 @@ export default function RestaurantCard({
   restaurant,
   setOpenModel,
   setSelectRestaurant,
+  setFooditemModel
 }) {
   const {
     restaurantName,
@@ -35,7 +36,7 @@ export default function RestaurantCard({
     approvedStatus,
   } = restaurant || {};
 
-const {isRefresh , setIsRefresh} = useAppContext()
+  const { isRefresh, setIsRefresh } = useAppContext()
 
   const deleteHandler = async (id) => {
     try {
@@ -214,12 +215,13 @@ const {isRefresh , setIsRefresh} = useAppContext()
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="contained"
-              startIcon={<EditIcon />}
+              startIcon={<EditIcon sx={{ fontSize: 10 }} />}
               onClick={() => {
                 setSelectRestaurant(restaurant);
                 setOpenModel(true);
               }}
               sx={{
+                fontSize: "10px",
                 backgroundColor: "#95ca4d",
                 color: "white",
                 '&:hover': {
@@ -243,6 +245,14 @@ const {isRefresh , setIsRefresh} = useAppContext()
               }}
             >
               Delete
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{ float: "right" }}
+              onClick={() => setFooditemModel(true)}
+            >
+              Create food item
             </Button>
           </Box>
         </Box>

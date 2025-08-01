@@ -4,7 +4,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import axios from "axios";
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import FoodEditModal from "../Modal/FoodEdit";
 import FoodCard from "../allCard/FoodCard";
 import { useAppContext } from "../../Context/userContext";
@@ -38,20 +38,19 @@ function a11yProps(index) {
 }
 
 export default function RestaurantTabs({ dataFood }) {
+  console.log(dataFood, "dataFood")
   const [value, setValue] = React.useState(0);
   const [foodopen, setFoodopen] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-  const {isRefresh , setIsRefresh}=useAppContext()
+  const { isRefresh, setIsRefresh } = useAppContext()
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // Group foods by category
   const categories = [...new Set(dataFood.map((item) => item.category))];
   const groupedData = categories.map((cat) =>
     dataFood.filter((item) => item.category === cat)
   );
-
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

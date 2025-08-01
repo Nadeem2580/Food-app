@@ -30,7 +30,7 @@ const style = {
   p: 4,
 };
 
-const categories = ["Biryani", "Fast Food" , "Chiness" ];
+const categories = ["Biryani", "Fast Food", "Chiness"];
 
 const schema = yup.object().shape({
   name: yup.string().required("Food name is required"),
@@ -46,7 +46,7 @@ const schema = yup.object().shape({
 export default function FoodItemModal({
   open,
   setOpen,
- 
+
 }) {
   const [image, setImage] = useState(null);
   const {
@@ -70,7 +70,7 @@ export default function FoodItemModal({
   const imageHandler = (e) => {
     setImage(e.target.files[0]);
   };
-const {isRefresh ,setIsRefresh}= useAppContext()
+  const { navigate, isRefresh, setIsRefresh } = useAppContext()
   const onSubmit = async (obj) => {
     try {
       let imageUrl;
@@ -106,6 +106,7 @@ const {isRefresh ,setIsRefresh}= useAppContext()
       reset();
       setImage(null);
       setIsRefresh(!isRefresh);
+      navigate("/vendor-Menu")
       toaster({
         message: "Food item created successfully",
         type: "success",

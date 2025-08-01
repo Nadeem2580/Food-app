@@ -51,13 +51,9 @@ function VenderLayout(props) {
     navigate("/");
   };
   const VendorListing = [
+    
     {
-      name: "Dashboard",
-      url: "/vendor-dahsboard",
-      icon: <DashboardIcon />,
-    },
-    {
-      name: "Resturant",
+      name: "Restaurant",
       url: "/vendor-Restaurant",
       icon: <RestaurantIcon />,
     },

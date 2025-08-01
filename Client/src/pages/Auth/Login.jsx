@@ -78,7 +78,7 @@ const LoginPage = () => {
       const user = res.data.data;
 
       if (user.type === "admin") navigate("/admin-dashboard");
-      else if (user.type === "vendor") navigate("/vendor-dahsboard");
+      else if (user.type === "vendor") navigate("/vendor-Restaurant");
       else if (user.type === "customer") navigate("/user-dashboard");
       toaster({ type: "success", message: "Login successful" });
       reset();

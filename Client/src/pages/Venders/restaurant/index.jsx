@@ -8,16 +8,20 @@ import Cookies from "js-cookie";
 import RestaurantCard from "../../../Component/allCard/Card";
 import EditModel from "../../../Component/Modal/EditModal";
 import { useAppContext } from "../../../Context/userContext";
-
+import RestaurantTabs from "../../../Component/Layout/Tabs";
+import ItemModal from "../../../Component/Modal/ItemModel"
 const VandorRestaurant = () => {
   //  ------------ Create Model -------------
   const [vendorModals, setVendorModals] = useState(false);
 
   //  ------------ Update Model -------------
+
   const [OpenModel, setOpenModel] = useState(false);
   const [restaurantData, setRestaurantData] = useState([]);
   const [selectRestaurant, setSelectRestaurant] = useState({});
-     const {isRefresh ,setIsRefresh} = useAppContext()
+  const [fooditemModel, setFooditemModel] = useState(false);
+  const [dataFood, setDataFood] = useState([]);
+  const { isRefresh, setIsRefresh } = useAppContext()
   useEffect(() => {
     fetchData();
   }, [isRefresh]);
@@ -39,7 +43,7 @@ const VandorRestaurant = () => {
   };
 
   return (
-    
+
     <>
       <Box
         sx={{
@@ -66,6 +70,7 @@ const VandorRestaurant = () => {
             restaurant={restaurant}
             setIsRefresh={setIsRefresh}
             isRefresh={isRefresh}
+            setFooditemModel={setFooditemModel}
             setOpenModel={setOpenModel}
             setSelectRestaurant={setSelectRestaurant}
           />
@@ -79,6 +84,18 @@ const VandorRestaurant = () => {
         setIsRefresh={setIsRefresh}
       />
 
+      <RestaurantTabs
+        dataFood={dataFood}
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+      />
+      <ItemModal
+        open={fooditemModel}
+        setOpen={setFooditemModel}
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+      />
+
       {OpenModel && (
         <EditModel
           open={OpenModel}
@@ -89,7 +106,7 @@ const VandorRestaurant = () => {
           setIsRefresh={setIsRefresh}
         />
       )}
-   </>
+    </>
   );
 };
 
