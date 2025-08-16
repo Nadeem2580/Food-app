@@ -89,12 +89,14 @@ const VandorRestaurant = () => {
         setIsRefresh={setIsRefresh}
         isRefresh={isRefresh}
       />
-      <ItemModal
+
+      {fooditemModel && <ItemModal
+        data={selectRestaurant}
         open={fooditemModel}
         setOpen={setFooditemModel}
         setIsRefresh={setIsRefresh}
         isRefresh={isRefresh}
-      />
+      />}
 
       {OpenModel && (
         <EditModel

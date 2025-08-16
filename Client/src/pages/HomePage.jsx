@@ -86,12 +86,12 @@ const HomePage = () => {
 
 
           {
-            restaurants.map((restaurant, index) => {
+            restaurants?.map((restaurant, index) => {
               return (
-                <Grid size={{ xs: 12, md: 6, lg: 4 }} sx={{display:"flex" , justifyContent:"center"}}>
+                <Grid size={{ xs: 12, md: 6, lg: 4 }} sx={{ display: "flex", justifyContent: "center" }}>
                   <HomePageCards key={index} restaurants={restaurant} />
-                </Grid>   
-                  )
+                </Grid>
+              )
             })
           }
         </Grid>

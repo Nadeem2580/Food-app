@@ -46,7 +46,7 @@ const schema = yup.object().shape({
 export default function FoodItemModal({
   open,
   setOpen,
-
+  data
 }) {
   const [image, setImage] = useState(null);
   const {
@@ -65,7 +65,6 @@ export default function FoodItemModal({
     },
     resolver: yupResolver(schema),
   });
-
   const handleClose = () => setOpen(false);
   const imageHandler = (e) => {
     setImage(e.target.files[0]);
@@ -91,6 +90,7 @@ export default function FoodItemModal({
       const sendObj = {
         ...obj,
         imageUrl: imageUrl || null,
+        restaurantId: data._id,
       };
       const response = await axios.post(
         `${BASE_URL}/api/create-restaurant-food`,
@@ -101,7 +101,7 @@ export default function FoodItemModal({
           },
         }
       );
-
+console.log(response , "food item created")
       handleClose();
       reset();
       setImage(null);

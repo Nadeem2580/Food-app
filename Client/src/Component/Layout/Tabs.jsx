@@ -38,7 +38,6 @@ function a11yProps(index) {
 }
 
 export default function RestaurantTabs({ dataFood }) {
-  console.log(dataFood, "dataFood")
   const [value, setValue] = React.useState(0);
   const [foodopen, setFoodopen] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
