@@ -24,6 +24,7 @@ export default function RestaurantCard({
   setSelectRestaurant,
   setFooditemModel
 }) {
+
   const {
     restaurantName,
     details,

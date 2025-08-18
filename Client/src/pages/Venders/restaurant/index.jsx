@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
-import VenderLayout from "../../../Component/Layout/VenderLayout";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import VendorModal from "../../../Component/Modal/Modal";
 import axios from "axios";
-import { BASE_URL, toaster } from "../../../Utils/Utility";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import RestaurantCard from "../../../Component/allCard/Card";
-import EditModel from "../../../Component/Modal/EditModal";
-import { useAppContext } from "../../../Context/userContext";
 import RestaurantTabs from "../../../Component/Layout/Tabs";
-import ItemModal from "../../../Component/Modal/ItemModel"
+import EditModel from "../../../Component/Modal/EditModal";
+import ItemModal from "../../../Component/Modal/ItemModel";
+import VendorModal from "../../../Component/Modal/Modal";
+import { useAppContext } from "../../../Context/userContext";
+import { BASE_URL, toaster } from "../../../Utils/Utility";
 const VandorRestaurant = () => {
   //  ------------ Create Model -------------
   const [vendorModals, setVendorModals] = useState(false);
